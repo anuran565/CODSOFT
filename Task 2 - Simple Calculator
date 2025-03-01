@@ -1,0 +1,82 @@
+#Simple Calculator GUI Application
+import tkinter as tk
+def get_input(button_text):
+    #Logic of all the buttons behind execution
+    current_text=text_box.get()  #Retrieves the current text from text_box and stores in it 
+    if button_text == "Clear":     #Clears the textbox if the Clear button is clicked
+        text_box.delete(0, tk.END)
+    elif button_text == "=":         #Here through exception handling it tries to evaluate the result stored in the current_text,treats the string as python code and exceutes it
+    
+        try:
+            result = eval(current_text)
+            text_box.delete(0,tk.END)       #Evaluation is successful,the textbox gets cleared
+            text_box.insert(0,str(result))   #The result of the evaluation converted into a string is stored in the current_text
+        except Exception as e:                #In case of error,the exception block of code is executed
+            text_box.delete(0,tk.END)
+            text_box.insert(0,"Error")
+    else:                                      #This block of code is executed if the button which was clicked was neither "Clear" nor "="
+        text_box.insert(tk.END,button_text)
+        
+    
+
+
+window=tk.Tk()
+window.geometry("200x300")
+window.title("Simple Calculator Application")
+
+def background_color(color="lightblue"):
+    window.configure(bg=color)
+    return color
+color = background_color()
+
+#Label
+label=tk.Label(window, text="Simple Calculator", font=("Times New Roman",14,"bold"), foreground="blue")
+label.grid(row=0, column=0, columnspan=4, pady=10)
+window.configure(bg=color)
+
+
+#Textbox
+
+text_box=tk.Entry(window)
+text_box.grid(row=1, column=0, columnspan=4, padx=10, pady=10)  #Padding of the textbox
+
+#Buttons
+buttons = ["1","2","3","+",
+           "4","5","6","-",
+           "7","8","9","*",
+           "0","Clear","/","=",
+           "%"
+           ]
+
+row_val=2  #Starting the buttons after the label and textbox
+col_val=0
+
+button_colors={
+    "+":"lightgreen",
+    "-":"lightcoral",
+    "*":"lightyellow",
+    "/":"lightblue",
+    "Clear":"orange",
+    "=":"skyblue",
+    "%":"pink"
+    }
+
+for button_text in buttons:
+    button_bg=button_colors.get(button_text, "lightgray")
+    button = tk.Button(window, text=button_text, command=lambda text=button_text:get_input(text), width=5, bg=button_bg)
+    button.grid(row=row_val, column=col_val, padx=5, pady=5)
+   
+
+    col_val += 1
+    if col_val >=3:
+        col_val=0
+        row_val += 1
+        
+
+
+window.mainloop()
+
+
+
+
+
