@@ -1,0 +1,224 @@
+#login.py
+from tkinter import *
+from tkinter import messagebox
+import subprocess
+
+def login():
+    username=entry1.get()
+    password=entry2.get()
+
+    
+
+    if(username=="prem123" and password=="premani"):
+        messagebox.showinfo("","Login Successfully")
+        subprocess.Popen(["python","Task 1.py"])
+    else:
+        messagebox.showinfo("","New to the application,register first.")
+        subprocess.Popen(["python","Register(Task1).py"])
+
+window=Tk()
+window.title("Login")
+window.geometry("400x650+400+100")
+window.configure(bg="#e0f2f7")
+
+global entry1
+global entry2
+
+Label(window,text="Login Page",font="arial 25").pack(pady=50)
+Label(window,text="Username").place(x=100,y=150)
+Label(window,text="Password").place(x=100,y=200)
+
+entry1=Entry(window,bd=5)
+entry1.place(x=200,y=150)
+
+entry2=Entry(window,bd=5,show="*")
+entry2.place(x=200,y=200)
+
+Button(window,text="Login",command=login,height=3,width=13,bd=6).place(x=100,y=250)
+Button(window,text="Register",command=login,height=3,width=13,bd=6).place(x=250,y=250)
+window.mainloop()
+#register.py
+from tkinter import *
+from tkinter import messagebox
+import re
+import subprocess
+window=Tk()
+window.title("Registration Page")
+window.geometry("400x650+400+100")
+window.configure(bg="#e0f2f7")
+window.resizable(False,False)
+
+def register():
+    name = nameValue.get()  # Get the string from nameValue
+    username = usernameValue.get()
+    password = passwordValue.get()
+
+    if not name and not username and not password:  # Check for blank fields
+        messagebox.showinfo("", "Blank Details Not Allowed")
+    elif re.search(r'\d', name):  # Check if name contains numbers
+        messagebox.showinfo("", "Name cannot contain numbers.")
+    else:
+        messagebox.showinfo("", "Registration Done Successfully")
+        subprocess.Popen(["python","Task 1.py"])
+        nameValue.set("") #clear the name field
+        usernameValue.set("") # clear the username field
+        passwordValue.set("") # clear the password field
+
+Label(window,text="Registration Page",font="arial 25").pack(pady=50)
+Label(text="Name",font=25).place(x=100,y=150)
+Label(text="Username",font=25).place(x=100,y=200)
+Label(text="Password",font=25).place(x=100,y=250)
+
+
+
+#entry
+nameValue=StringVar()
+usernameValue=StringVar()
+passwordValue=StringVar()
+
+nameEntry=Entry(window,textvariable=nameValue,width=20,bd=2,font=20)
+usernameEntry=Entry(window,textvariable=usernameValue,width=20,bd=2,font=20)
+passwordEntry=Entry(window,textvariable=passwordValue,width=20,bd=2,font=20,show="*")
+
+
+
+nameEntry.place(x=200,y=150)
+usernameEntry.place(x=200,y=200)
+passwordEntry.place(x=200,y=250)
+
+Button(window,text="Register",command=register,height=3,width=13,bd=6).place(x=100,y=300)
+
+window.mainloop()
+#main.py Code of main application
+import tkinter as tk
+from tkinter import *
+
+
+
+
+
+window=Tk()
+window.title("To-Do List")
+window.geometry("400x650+400+100")
+window.resizable("False","False")
+
+#Placing the topbar
+topimg=PhotoImage(file="topbar.png")
+topbar_label=Label(window,image=topimg)
+topbar_label.grid(row=0, column=0, columnspan=4, sticky="ew")
+
+
+
+#Placing the six-dot image
+bar_image=PhotoImage(file="dock.png")
+bar_label=Label(window,image=bar_image,bg="#32405b")
+bar_label.grid(row=0, column=0, columnspan=1, sticky="ew")
+
+heading=Label(window, text="Tasks", font=("Times New Roman", 20), fg="white", bg="#32405b")
+heading.grid(row=0, column=1, columnspan=4, sticky="ew")
+
+
+
+    
+
+#Background-Color of the application
+def background_color(color="lightblue"):
+    window.configure(bg=color)
+    return color
+background_color()
+
+
+
+# Textbox and button
+def button_clicked():
+    print("Button Clicked")
+
+# Configure row and column weights for centering
+window.rowconfigure(1, weight=1) # Centering row
+window.rowconfigure(2, weight=0) # Textbox and button row
+window.rowconfigure(3, weight=1) # Centering row
+window.columnconfigure(0, weight=1)
+window.columnconfigure(1, weight=0)
+window.columnconfigure(2, weight=0)
+window.columnconfigure(3, weight=1)
+
+text_box = Entry(window, width=50)
+text_box.grid(row=2, column=1, padx=5, pady=10, sticky="ew")
+my_button = Button(window, text="Add", command=button_clicked,  bg="#5a95ff", fg="#fff")
+my_button.grid(row=2, column=2, padx=5, pady=10)
+
+def add_task():
+    task = text_box.get()
+    if task:
+        listbox.insert(tk.END, task)
+        text_box.delete(0, tk.END)
+
+my_button = Button(window, text="Add", command=add_task, bg="#5a95ff", fg="#fff")
+my_button.grid(row=2, column=2, padx=5, pady=10)
+
+# Listbox with Scrollbar
+scrollbar = Scrollbar(window)
+scrollbar.grid(row=3, column=3, sticky="ns")
+
+listbox = Listbox(window, width=50, yscrollcommand=scrollbar.set)
+listbox.grid(row=3, column=1, columnspan=2, padx=10, pady=10, sticky="ew")
+
+scrollbar.config(command=listbox.yview)
+
+# Delete task
+def delete_task():
+    try:
+        selected_task_index = listbox.curselection()[0]
+        listbox.delete(selected_task_index)
+    except IndexError:
+        messagebox.showerror("Error", "Please select a task to delete.")
+
+Delete_Button = PhotoImage(file="delete.png")
+Button(window, image=Delete_Button, bd=0, command=delete_task).grid(row=5, column=1, pady=13)
+
+
+# Update Task
+
+def update_task():
+    try:
+        selected_task_index = listbox.curselection()[0]
+        current_task = listbox.get(selected_task_index)
+        text_box.delete(0, tk.END)
+        text_box.insert(0, current_task)
+
+        def save_updated_task():
+            new_task = text_box.get()
+            if new_task:
+                listbox.delete(selected_task_index)
+                listbox.insert(selected_task_index, new_task)
+                text_box.delete(0, tk.END)
+                update_window.destroy()
+
+        update_window = tk.Toplevel(window)
+        update_window.title("Update Task")
+        update_button = Button(update_window, text="Save Update", command=save_updated_task)
+        update_button.pack(pady=10)
+
+    except IndexError:
+        messagebox.showerror("Error", "Please select a task to update.")
+
+update_button = Button(window, text="Update", command=update_task, bg="#5a95ff", fg="#fff")
+update_button.grid(row=4, column=1, pady=10)
+
+# Listbox with Scrollbar
+scrollbar = Scrollbar(window)
+scrollbar.grid(row=3, column=3, sticky="ns")  # Place scrollbar
+
+listbox = Listbox(window, width=50, yscrollcommand=scrollbar.set)
+listbox.grid(row=3, column=1, columnspan=2, padx=10, pady=10, sticky="ew")
+
+scrollbar.config(command=listbox.yview)
+
+
+
+
+#Image icon of the application
+image_icon=PhotoImage(file="image1.png")
+window.iconphoto(False,image_icon)
+window.mainloop()
+
